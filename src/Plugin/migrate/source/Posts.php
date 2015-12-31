@@ -8,7 +8,6 @@
 namespace Drupal\migrate_wordpress\Plugin\migrate\source;
 
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -18,7 +17,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "posts"
  * )
  */
-class Posts extends DrupalSqlBase implements SourceEntityInterface {
+class Posts extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}
@@ -66,20 +65,6 @@ class Posts extends DrupalSqlBase implements SourceEntityInterface {
     $row->setSourceProperty('type', $type);
 
     return parent::prepareRow($row);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'node';
   }
 
   /**

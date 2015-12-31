@@ -7,7 +7,6 @@
 namespace Drupal\migrate_wordpress\Plugin\migrate\source;
 
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -17,7 +16,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "vocabulary"
  * )
  */
-class Vocabulary extends DrupalSqlBase implements SourceEntityInterface {
+class Vocabulary extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}
@@ -58,20 +57,6 @@ class Vocabulary extends DrupalSqlBase implements SourceEntityInterface {
     $row->setSourceProperty('label', $label);
 
     return parent::prepareRow($row);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return false;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'taxonomy_vocabulary';
   }
 
   /**

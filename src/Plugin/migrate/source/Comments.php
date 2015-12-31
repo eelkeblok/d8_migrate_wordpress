@@ -8,7 +8,6 @@
 namespace Drupal\migrate_wordpress\Plugin\migrate\source;
 
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -18,7 +17,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "comments"
  * )
  */
-class Comments extends DrupalSqlBase implements SourceEntityInterface {
+class Comments extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}
@@ -61,20 +60,6 @@ class Comments extends DrupalSqlBase implements SourceEntityInterface {
   public function fields() {
     $fields = $this->commentFields();
     return $fields;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'comment';
   }
 
   /**
