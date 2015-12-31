@@ -1,5 +1,5 @@
 name: Migrate Wordpress
-description: 'Contains migrations from wordpress blog.'
+description: 'Migrate a WordPress blog to Drupal.'
 package: Migrations
 type: module
 core: 8.x
