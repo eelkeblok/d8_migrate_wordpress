@@ -12,7 +12,8 @@ process:
   cid: comment_ID
   pid:
     -
-      plugin: skip_process_on_empty
+      plugin: skip_on_empty
+      method: process
       source: comment_parent
     -
       plugin: migration
@@ -31,7 +32,8 @@ process:
     default_value: "comment"
   uid:
     -
-      plugin: skip_process_on_empty
+      plugin: skip_on_empty
+      method: process
       source: user_id
     -
       plugin: migration
