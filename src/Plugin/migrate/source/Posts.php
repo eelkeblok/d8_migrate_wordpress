@@ -44,6 +44,8 @@ class Posts extends DrupalSqlBase {
       'post_content' => $this->t('Content'),
       'post_author' => $this->t('Authored by (uid)'),
       'post_type' => $this->t('Post type'),
+      'post_date' => $this->t('Post date'),
+      'post_modified' => $this->t('Post modified date'),
     );
     return $fields;
   }

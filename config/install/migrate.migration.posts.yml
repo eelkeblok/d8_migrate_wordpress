@@ -15,6 +15,14 @@ process:
     default_value: "und"
   title: post_title
   uid: post_author
+  created:
+    plugin: callback
+    callable: strtotime
+    source: post_date
+  changed:
+    plugin: callback
+    callable: strtotime
+    source: post_modified
   status:
     plugin: default_value
     default_value: 1
