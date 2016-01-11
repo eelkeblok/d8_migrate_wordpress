@@ -24,7 +24,11 @@ process:
     callable: strtotime
     source: post_modified
   status:
-    plugin: default_value
-    default_value: 1
+    plugin: static_map
+    source: post_status
+    map:
+      publish: 1
+      draft: 0
+      inherit: 0
   'body/value': post_content
   'body/format': 'basic_html'

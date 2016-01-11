@@ -9,6 +9,7 @@ namespace Drupal\migrate_wordpress\Plugin\migrate\source;
 
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\Core\Database\Query\Condition;
 
 /**
  * Extract posts from Wordpress database.
@@ -23,10 +24,12 @@ class Posts extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    // Select published posts.
+    // Select posts and pages.
+    $postTypeCondition = new Condition('OR');
+    $postTypeCondition->condition('post_type', 'post')->condition('post_type', 'page');
     $query = $this->select('wp_posts', 'p')
       ->fields('p', array_keys($this->postFields()))
-      ->condition('post_status', 'publish', '=');
+      ->condition($postTypeCondition);
 
     return $query;
   }
@@ -46,6 +49,7 @@ class Posts extends DrupalSqlBase {
       'post_type' => $this->t('Post type'),
       'post_date' => $this->t('Post date'),
       'post_modified' => $this->t('Post modified date'),
+      'post_status' => $this->t('Post status'),
     );
     return $fields;
   }
