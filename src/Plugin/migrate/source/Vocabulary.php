@@ -22,7 +22,7 @@ class Vocabulary extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('wp_term_taxonomy', 'v')
+    return $this->select('term_taxonomy', 'v')
       ->distinct()
       ->fields('v', array_keys($this->vocabFields()));
   }

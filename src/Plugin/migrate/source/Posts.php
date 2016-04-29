@@ -27,7 +27,7 @@ class Posts extends DrupalSqlBase {
     // Select posts and pages.
     $postTypeCondition = new Condition('OR');
     $postTypeCondition->condition('post_type', 'post')->condition('post_type', 'page');
-    $query = $this->select('wp_posts', 'p')
+    $query = $this->select('posts', 'p')
       ->fields('p', array_keys($this->postFields()))
       ->condition($postTypeCondition);
 

@@ -22,7 +22,7 @@ class Terms extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('wp_terms', 'wpt')
+    return $this->select('terms', 'wpt')
       ->fields('wpt', array_keys($this->termsFields()));
   }
 
@@ -53,7 +53,7 @@ class Terms extends DrupalSqlBase {
    */
   public function prepareRow(Row $row) {
     // Find parents for this row.
-    $query = $this->select('wp_term_taxonomy', 'wptt')
+    $query = $this->select('term_taxonomy', 'wptt')
       ->fields('wptt', array('parent', 'term_id', 'taxonomy', 'description'))
       ->condition('term_id', $row->getSourceProperty('term_id'))
       ->execute()

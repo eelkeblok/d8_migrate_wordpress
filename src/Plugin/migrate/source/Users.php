@@ -22,7 +22,7 @@ class Users extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('wp_users', 'u')
+    return $this->select('users', 'u')
       ->fields('u', array_keys($this->userFields()));
   }
 

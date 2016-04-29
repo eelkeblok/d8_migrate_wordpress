@@ -24,7 +24,7 @@ class Comments extends DrupalSqlBase {
    */
   public function query() {
     // Select approved comments.
-    $query = $this->select('wp_comments', 'c')
+    $query = $this->select('comments', 'c')
       ->fields('c', array_keys($this->commentFields()))
       ->condition('comment_approved', '1', '=');
 
