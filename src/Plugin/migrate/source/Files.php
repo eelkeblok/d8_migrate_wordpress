@@ -64,9 +64,29 @@ class Files extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $post_type = $row->getSourceProperty('post_type');
-    $type = $post_type == 'page' ? 'page' : 'article';
-    $row->setSourceProperty('type', $type);
+    $source = $row->getSource();
+    $filemetadata = unserialize($source['filemetadata']);
+
+    foreach ($filemetadata as $key => $value) {
+      $row->setSourceProperty($key, $value);
+    }
+
+    // Check if file is present. If not, skip. If so, determine file size.
+    // We'll assume the files are located in the public location.
+    $file_location = 'public://' . $filemetadata['file'];
+    if (file_exists($file_location)) {
+      $row->setSourceProperty('filesize', filesize($file_location));
+      $row->setSourceProperty('filelocation', $file_location);
+    }
+    else {
+      // Skip.
+      return FALSE;
+    }
+
+    // Remove the path from the filename field so we have just the name
+    // available.
+    $parts = explode('/', $source['filename']);
+    $row->setSourceProperty('filename', array_pop($parts));
 
     return parent::prepareRow($row);
   }
