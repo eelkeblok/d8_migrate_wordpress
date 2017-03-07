@@ -11,6 +11,7 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\migrate_wordpress\WpOptionTrait;
+use Drupal\bootstrap\Utility\Unicode;
 
 /**
  * Extract posts from Wordpress database.
@@ -75,6 +76,13 @@ class Posts extends DrupalSqlBase {
 
     // Build a path alias.
     $permalink_structure = $this->getOption('permalink_structure');
+
+    // If the last character of the pattern is a slash, strip it off.
+    $length = Unicode::strlen($permalink_structure);
+    if (Unicode::substr($permalink_structure, $length - 1, 1) == '/') {
+      $permalink_structure = Unicode::substr($permalink_structure, 0, $length - 1);
+    }
+
     $post_date = $row->getSourceProperty('post_date');
     $post_name = $row->getSourceProperty('post_name');
 
