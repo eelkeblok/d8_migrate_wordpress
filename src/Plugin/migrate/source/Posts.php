@@ -10,6 +10,7 @@ namespace Drupal\migrate_wordpress\Plugin\migrate\source;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\migrate_wordpress\WpOptionTrait;
 
 /**
  * Extract posts from Wordpress database.
@@ -19,6 +20,7 @@ use Drupal\Core\Database\Query\Condition;
  * )
  */
 class Posts extends DrupalSqlBase {
+  use WpOptionTrait;
 
   /**
    * {@inheritdoc}
@@ -50,6 +52,7 @@ class Posts extends DrupalSqlBase {
       'post_date' => $this->t('Post date'),
       'post_modified' => $this->t('Post modified date'),
       'post_status' => $this->t('Post status'),
+      'post_name' => $this->t('Post machine name'),
     );
     return $fields;
   }
@@ -69,6 +72,34 @@ class Posts extends DrupalSqlBase {
     $post_type = $row->getSourceProperty('post_type');
     $type = $post_type == 'page' ? 'page' : 'article';
     $row->setSourceProperty('type', $type);
+
+    // Build a path alias.
+    $permalink_structure = $this->getOption('permalink_structure');
+    $post_date = $row->getSourceProperty('post_date');
+    $post_name = $row->getSourceProperty('post_name');
+
+    if (!empty($post_date) && !empty($post_name)) {
+      $post_time = strtotime($post_date);
+
+      $alias = $permalink_structure;
+
+      $replacements = [
+        '%postname%' => $post_name,
+        '%year%' => date('Y', $post_time),
+        '%monthnum%' => date('m', $post_time),
+        '%day%' => date('d', $post_time),
+      ];
+
+      foreach ($replacements as $needle => $replacement) {
+        $alias = str_replace($needle, $replacement, $alias);
+      }
+
+      // Only set the source property if the alias does not contain any
+      // placeholders anymore.
+      if (strpos($alias, '%') === FALSE) {
+        $row->setSourceProperty('alias', $alias);
+      }
+    }
 
     return parent::prepareRow($row);
   }
