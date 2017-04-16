@@ -109,6 +109,22 @@ class Posts extends DrupalSqlBase {
       }
     }
 
+    // Find post tags.
+    $id = $row->getSourceProperty('id');
+    $query = $this->select('term_relationships', 'tr');
+    $query->join('term_taxonomy', 'tt', 'tt.term_id = tr.term_taxonomy_id');
+    // $query->join('terms', 't', 'tt.term_id = t.term_id');
+    // $query->fields('t', ['name'])
+    $query->fields('tr', ['term_taxonomy_id'])
+      ->condition('tr.object_id', $id)
+      ->condition('tt.taxonomy', 'post_tag');
+    $result = $query->execute();
+
+    if ($result) {
+      $tags = $result->fetchCol();
+      $row->setSourceProperty('post_tags', $tags);
+    }
+
     return parent::prepareRow($row);
   }
 
