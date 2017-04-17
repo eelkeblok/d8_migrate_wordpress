@@ -109,20 +109,27 @@ class Posts extends DrupalSqlBase {
       }
     }
 
-    // Find post tags.
+    // Pull in tags and categories.
+    // Array holding name of source property as the key and the WP vocabulary
+    // name as the value.
+    $fields = [
+      'post_tags' => 'post_tag',
+      'post_categories' => 'category',
+    ];
     $id = $row->getSourceProperty('id');
-    $query = $this->select('term_relationships', 'tr');
-    $query->join('term_taxonomy', 'tt', 'tt.term_id = tr.term_taxonomy_id');
-    // $query->join('terms', 't', 'tt.term_id = t.term_id');
-    // $query->fields('t', ['name'])
-    $query->fields('tr', ['term_taxonomy_id'])
-      ->condition('tr.object_id', $id)
-      ->condition('tt.taxonomy', 'post_tag');
-    $result = $query->execute();
 
-    if ($result) {
-      $tags = $result->fetchCol();
-      $row->setSourceProperty('post_tags', $tags);
+    foreach ($fields as $source_property => $vocabulary_name) {
+      $query = $this->select('term_relationships', 'tr');
+      $query->join('term_taxonomy', 'tt', 'tt.term_id = tr.term_taxonomy_id');
+      $query->fields('tr', ['term_taxonomy_id'])
+        ->condition('tr.object_id', $id)
+        ->condition('tt.taxonomy', $vocabulary_name);
+      $result = $query->execute();
+
+      if ($result) {
+        $terms = $result->fetchCol();
+        $row->setSourceProperty($source_property, $terms);
+      }
     }
 
     return parent::prepareRow($row);
